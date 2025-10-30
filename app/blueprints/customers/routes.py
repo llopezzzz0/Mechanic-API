@@ -1,13 +1,66 @@
-from .schemas import customer_schema, customers_schema
+from .schemas import customer_schema, customers_schema, login_schema
 from flask import request, jsonify
 from marshmallow import ValidationError
 from sqlalchemy import select
-from app.models import Customer, db
+from app.models import Customer, db, ServiceTicket
 from . import customers_bp
 from app.extensions import limiter
+from app.utils.util import encode_token, token_required
+
+
+
+@customers_bp.route("/login", methods=["POST"])
+def login():
+    try:
+        credentials = login_schema.load(request.json)
+        email = credentials['email']
+        password = credentials['password']
+    except ValidationError as e:
+        return jsonify(e.messages), 400
+    
+    query = select(Customer).where(Customer.email == email)
+    customer = db.session.execute(query).scalar_one_or_none()
+    
+    if customer and customer.password == password:
+        auth_token = encode_token(customer.id)
+        
+        response = {
+            "status": "success",
+            "message": "successfully logged in",
+            "auth_token": auth_token
+        }
+        
+        return jsonify(response), 200
+    else:
+        return jsonify({"message": "Invalid email or password!"}), 401
+  
+
+
+@customers_bp.route("/my-tickets", methods=["GET"])
+@token_required
+def get_tickets(customer_id):
+    query = select(ServiceTicket).where(ServiceTicket.customer_id == customer_id)
+    tickets = db.session.execute(query).scalars().all()
+    
+    result = [
+        {
+            "vin":t.vin,
+            "customer_id":t.customer_id,
+            "mechanics":t.mechanics,
+            "id":t.id,
+            "service_description": t.service_description,
+            "date": t.date
+        }
+        for t in tickets
+    ]
+    return jsonify({"tickets": result}), 200
+
+
+
+
 
 @customers_bp.route("/", methods=["POST"])
-@limiter.limit("5 per minute")
+@limiter.limit("5 per minute")# Limit to 5 requests per minute to prevent abuse
 def add_customer():
     try:
         customer_data = customer_schema.load(request.json)
@@ -27,10 +80,17 @@ def add_customer():
 
 @customers_bp.route("/", methods=["GET"])
 def get_customers():
-    query = select(Customer)
-    customers = db.session.execute(query).scalars().all()
+    try:
+        page = int(request.args.get("page"))
+        per_page = int(request.args.get("per_page"))
+        query = select(Customer)
+        customers = db.paginate(query, page=page, per_page=per_page)
+        return customers_schema.jsonify(customers.items), 200
+    except:
+        query = select(Customer)
+        customers = db.session.execute(query).scalars().all()
     
-    return customers_schema.jsonify(customers)
+        return customers_schema.jsonify(customers)
 
 
 @customers_bp.route("/<int:id>", methods=["GET"])
@@ -40,7 +100,8 @@ def get_customer(id):
    
 
 
-@customers_bp.route("/<int:id>", methods=["PUT"])
+@customers_bp.route("/", methods=["PUT"])
+@token_required
 def update_customer(id):
     customer = db.session.get(Customer, id)
     
@@ -59,7 +120,8 @@ def update_customer(id):
     return customer_schema.jsonify(customer), 200
 
 
-@customers_bp.route("/<int:id>", methods=["DELETE"])
+@customers_bp.route("/", methods=["DELETE"])
+@token_required
 def delete_customer(id):
     customer = db.session.get(Customer, id)
     

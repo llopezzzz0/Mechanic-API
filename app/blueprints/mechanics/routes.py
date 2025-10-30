@@ -4,12 +4,18 @@ from marshmallow import ValidationError
 from sqlalchemy import select
 from app.models import Mechanic, db
 from . import mechanics_bp
+from app.extensions import cache
+from sqlalchemy.orm import selectinload
+
+
+
 
 
 
 
 
 @mechanics_bp.route("/", methods=["POST"])
+@cache.cached(timeout=60) # Cache the response for 60 seconds that reduces load and is storing repeated requests
 def add_mechanic():
     try:
         mechanic_data = mechanic_schema.load(request.json)
@@ -71,3 +77,17 @@ def delete_mechanic(id):
     db.session.delete(mechanic)
     db.session.commit()
     return jsonify({"message": "Mechanic deleted."}), 200
+
+
+
+@mechanics_bp.route("/most_tickets", methods=["GET"])
+def mechanics_by_most_tickets():
+    mechanics = db.session.scalars(select(Mechanic).options(selectinload(Mechanic.service_tickets))).all()
+    mechanics.sort(key=lambda m: len(m.service_tickets), reverse=True)
+    
+    return jsonify([
+        {"id": m.id, 
+         "name": m.name,
+         "tickets_worked": len(m.service_tickets)}
+        for m in mechanics
+    ]), 200
