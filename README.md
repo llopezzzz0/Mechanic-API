@@ -7,7 +7,7 @@ Website Features:
 -Application folder's init file
 -Extensions file
 -Blueprints folder
--Models folder with a customer model, mechanic model, service ticket model
+-Models folder with a customer model, mechanic model, service ticket model, Inventory model
 -Schemas files
 -Endpoints
 -App file
