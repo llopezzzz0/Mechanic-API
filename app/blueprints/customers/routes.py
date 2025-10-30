@@ -4,8 +4,10 @@ from marshmallow import ValidationError
 from sqlalchemy import select
 from app.models import Customer, db
 from . import customers_bp
+from app.extensions import limiter
 
 @customers_bp.route("/", methods=["POST"])
+@limiter.limit("5 per minute")
 def add_customer():
     try:
         customer_data = customer_schema.load(request.json)
