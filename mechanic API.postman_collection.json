@@ -154,7 +154,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"name\":\"Luke\",\r\n    \"email\":\"luke@gmail.com\",\r\n    \"phone\":\"518-888-8858\",\r\n    \"salary\":50.00\r\n}",
+					"raw": "{\r\n    \"name\":\"Janice\",\r\n    \"email\":\"janice@gmail.com\",\r\n    \"phone\":\"518-888-8848\",\r\n    \"salary\":50.00\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -285,7 +285,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"vin\":\"678\",\r\n    \"date\":\"2025-10-23\",\r\n    \"service_description\":\"Oil change\",\r\n    \"customer_id\":19\r\n}",
+					"raw": "{\r\n    \"vin\":\"213\",\r\n    \"service_date\":\"2025-10-30\",\r\n    \"service_description\":\"Oil change\",\r\n    \"customer_id\":20\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -365,9 +365,21 @@
 		},
 		{
 			"name": "Get service ticket",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
 			"request": {
 				"method": "GET",
 				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
 				"url": {
 					"raw": "http://127.0.0.1:5000/service_tickets",
 					"protocol": "http",
@@ -392,7 +404,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"email\": \"lupe@gmail.com\",\r\n    \"password\": \"678\"\r\n}",
+					"raw": "{\r\n    \"email\": \"grace@gmail.com\",\r\n    \"password\": \"678\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -425,7 +437,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NjEyNzMzMDIsImlhdCI6MTc2MTI2OTcwMiwic3ViIjoiMTkifQ.iNbhAvUkkZRC5nywRaQnmmmfLu81ZHdmA_VX6yW8Io8",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NjE4ODI5MDksImlhdCI6MTc2MTg3OTMwOSwic3ViIjoiMjAifQ.guoFa3MEIznqaAqj3YandhpNVFbvV1DJJgQHDEkoIFw",
 							"type": "string"
 						}
 					]
@@ -457,7 +469,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"add_ids\": [],\r\n    \"remove_ids\": [3]\r\n}",
+					"raw": "{\r\n    \"add_ids\": [3],\r\n    \"remove_ids\": []\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -465,7 +477,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://127.0.0.1:5000/service_tickets/2/edit",
+					"raw": "http://127.0.0.1:5000/service_tickets/10/edit",
 					"protocol": "http",
 					"host": [
 						"127",
@@ -476,7 +488,7 @@
 					"port": "5000",
 					"path": [
 						"service_tickets",
-						"2",
+						"10",
 						"edit"
 					]
 				}
@@ -513,7 +525,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"name\": \"Headlight bulb\",\r\n    \"price\": 100.00\r\n}",
+					"raw": "{\r\n    \"name\": \"Brake pad\",\r\n    \"price\": 100.00\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -579,7 +591,7 @@
 					"raw": "{\r\n    \"name\": \"Headlight bulb\",\r\n    \"price\": 100.00\r\n}"
 				},
 				"url": {
-					"raw": "http://127.0.0.1:5000/inventory/1",
+					"raw": "http://127.0.0.1:5000/inventory/6",
 					"protocol": "http",
 					"host": [
 						"127",
@@ -590,7 +602,7 @@
 					"port": "5000",
 					"path": [
 						"inventory",
-						"1"
+						"6"
 					]
 				}
 			},
@@ -603,7 +615,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"name\":\"Oil filter\",\r\n    \"price\": 160.00\r\n}",
+					"raw": "{\r\n    \"name\":\"Brake pad\",\r\n    \"price\": 200.00\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -611,7 +623,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://127.0.0.1:5000/inventory/1",
+					"raw": "http://127.0.0.1:5000/inventory/6",
 					"protocol": "http",
 					"host": [
 						"127",
@@ -622,7 +634,7 @@
 					"port": "5000",
 					"path": [
 						"inventory",
-						"1"
+						"6"
 					]
 				}
 			},
@@ -638,7 +650,7 @@
 					"raw": "{\r\n    \"name\":\"Oil filter\",\r\n    \"price\": 160.00\r\n}"
 				},
 				"url": {
-					"raw": "http://127.0.0.1:5000/inventory/1",
+					"raw": "http://127.0.0.1:5000/inventory/6",
 					"protocol": "http",
 					"host": [
 						"127",
@@ -649,7 +661,7 @@
 					"port": "5000",
 					"path": [
 						"inventory",
-						"1"
+						"6"
 					]
 				}
 			},
@@ -665,7 +677,7 @@
 					"raw": "{\r\n    \"name\": \"Headlight bulb\",\r\n    \"price\": 100.00\r\n}"
 				},
 				"url": {
-					"raw": "http://127.0.0.1:5000/service_tickets/1/add_inventory/2",
+					"raw": "http://127.0.0.1:5000/service_tickets/2/add_inventory/4",
 					"protocol": "http",
 					"host": [
 						"127",
@@ -676,9 +688,9 @@
 					"port": "5000",
 					"path": [
 						"service_tickets",
-						"1",
+						"2",
 						"add_inventory",
-						"2"
+						"4"
 					]
 				}
 			},

@@ -116,7 +116,7 @@ def edit_ticket(ticket_id):
     
     
 @service_tickets_bp.route("/<int:ticket_id>/add_inventory/<int:inventory_id>", methods=["PUT"])
-def add_inventory_to_ticket(ticket_id, inventory_id):
+def add_inventory_to_ticket(ticket_id, inventory_id): #route to add an inventory item to an existing service ticket
     service_ticket = db.session.get(ServiceTicket, ticket_id)
     inventory = db.session.get(Inventory, inventory_id)
 

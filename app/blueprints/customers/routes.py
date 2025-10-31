@@ -10,7 +10,7 @@ from app.utils.util import encode_token, token_required
 
 
 @customers_bp.route("/login", methods=["POST"])
-def login():
+def login(): #login route that will create a token for the customer
     try:
         credentials = login_schema.load(request.json)
         email = credentials['email']
@@ -37,7 +37,7 @@ def login():
 
 
 @customers_bp.route("/my-tickets", methods=["GET"])
-@token_required
+@token_required #token required wrapper that validates the token and returns the customer id
 def get_tickets(customer_id):
     query = select(ServiceTicket).where(ServiceTicket.customer_id == customer_id)
     tickets = db.session.execute(query).scalars().all()
@@ -46,10 +46,10 @@ def get_tickets(customer_id):
         {
             "vin":t.vin,
             "customer_id":t.customer_id,
-            "mechanics":t.mechanics,
+            "mechanics":[{"id":m.id} for m in t.mechanics],
             "id":t.id,
             "service_description": t.service_description,
-            "date": t.date
+            "service_date": t.service_date
         }
         for t in tickets
     ]
@@ -101,7 +101,7 @@ def get_customer(id):
 
 
 @customers_bp.route("/", methods=["PUT"])
-@token_required
+@token_required #token is required to update customers info
 def update_customer(id):
     customer = db.session.get(Customer, id)
     
@@ -121,7 +121,7 @@ def update_customer(id):
 
 
 @customers_bp.route("/", methods=["DELETE"])
-@token_required
+@token_required #token is required to delete customer
 def delete_customer(id):
     customer = db.session.get(Customer, id)
     

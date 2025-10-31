@@ -21,6 +21,7 @@ mechanic_service_ticket = Table(
     Column("service_ticket_id", ForeignKey("service_tickets.id"), primary_key=True)
 )
 
+#inventory and service ticket junction table 
 inventory_service = Table(
     "inventory_service",
     Base.metadata,
@@ -64,7 +65,7 @@ class ServiceTicket(Base):
     mechanics: Mapped[List["Mechanic"]] = relationship(secondary=mechanic_service_ticket, back_populates="service_tickets")
     inventory: Mapped[List["Inventory"]] = relationship(secondary=inventory_service, back_populates="service_tickets")
 
-class Inventory(Base):
+class Inventory(Base): #inventory model
     __tablename__ = "inventory"
     id: Mapped[int] = mapped_column(Integer,unique=True, primary_key=True)
     name: Mapped[str] = mapped_column(String(100), nullable=False)
