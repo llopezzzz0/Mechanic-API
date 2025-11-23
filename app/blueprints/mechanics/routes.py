@@ -43,9 +43,9 @@ def get_mechanics():
 
 @mechanics_bp.route("/<int:id>", methods=["GET"])
 def get_mechanic(id):
-   mechanic = db.session.get(Mechanic, id)
-   return mechanic_schema.jsonify(mechanic), 200
-   
+    mechanic = db.session.get(Mechanic, id)
+    return mechanic_schema.jsonify(mechanic), 200
+
 
 
 @mechanics_bp.route("/<int:id>", methods=["PUT"])
@@ -87,7 +87,7 @@ def mechanics_by_most_tickets():
     
     return jsonify([
         {"id": m.id, 
-         "name": m.name,
-         "tickets_worked": len(m.service_tickets)}
+        "name": m.name,
+        "tickets_worked": len(m.service_tickets)}
         for m in mechanics
     ]), 200

@@ -4,8 +4,7 @@ from marshmallow import ValidationError
 from sqlalchemy import select
 from app.models import Customer, Mechanic, ServiceTicket, db, mechanic_service_ticket, Inventory, inventory_service 
 from . import service_tickets_bp
-from app.utils.util import encode_token, token_required
-
+from datetime import date
 
 
 @service_tickets_bp.route("/", methods=["POST"])
@@ -43,7 +42,6 @@ def add_service_ticket_to_mechanic(ticket_id, mechanic_id):
     db.session.execute(mechanic_service_ticket.insert().values(mechanic_id=mechanic.id, service_ticket_id=service_ticket.id))
     db.session.commit()
     return jsonify({"message": "Service ticket added to mechanic successfully"}), 200
-   
     
 
 
@@ -114,7 +112,8 @@ def edit_ticket(ticket_id):
         "status": "success"
     }), 200
     
-    
+
+
 @service_tickets_bp.route("/<int:ticket_id>/add_inventory/<int:inventory_id>", methods=["PUT"])
 def add_inventory_to_ticket(ticket_id, inventory_id): #route to add an inventory item to an existing service ticket
     service_ticket = db.session.get(ServiceTicket, ticket_id)

@@ -33,7 +33,7 @@ def login(): #login route that will create a token for the customer
         return jsonify(response), 200
     else:
         return jsonify({"message": "Invalid email or password!"}), 401
-  
+
 
 
 @customers_bp.route("/my-tickets", methods=["GET"])
@@ -95,9 +95,9 @@ def get_customers():
 
 @customers_bp.route("/<int:id>", methods=["GET"])
 def get_customer(id):
-   customer = db.session.get(Customer, id)
-   return customer_schema.jsonify(customer), 200
-   
+    customer = db.session.get(Customer, id)
+    return customer_schema.jsonify(customer), 200
+
 
 
 @customers_bp.route("/", methods=["PUT"])

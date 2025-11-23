@@ -1,0 +1,1026 @@
+
+
+swagger: '2.0'
+info:
+  title: Mechanic API
+  description: API for managing mechanics and their services.
+  version: 1.0.0
+host: "127.0.0.1:5000"
+schemes:
+  - "http"
+consumes:
+  - "application/json"
+produces:
+  - "application/json"
+
+securityDefinitions:
+  bearerAuth:
+    type: apiKey
+    name: Authorization
+    in: header
+
+paths:
+  /customers/login:
+    post:
+      tags:
+        - Customers
+      summary: "Login endpoint, (generates token)"
+      description: "Validates customer credentials, generates and return a customer specific token."
+      parameters:
+          - in: "body"
+            name: "body"
+            description: "Login credentials"
+            required: true
+            schema:
+              $ref: "#/definitions/LoginCredentials"
+      responses:
+        200:
+          description: "Login successful"
+          schema:
+            $ref: "#/definitions/LoginResponse"
+          examples:
+            application/json:
+              token: "kjsbd87y23jsdhf8237y23jsdhf"
+              message: "Login successful"
+              status: "success"
+
+
+  /customers/my-tickets:
+    get:
+      tags:
+        - Customers
+      summary: "Returns tickets"
+      description: "Endpoint to retrieve all the customers tickets."
+      security:
+          - bearerAuth: []
+      parameters:
+          - in: path
+            name: my-tickets
+            description: "Information required to retrieve tickets"
+            required: true
+            schema:
+              $ref: "#/definitions/TicketPayload"
+      responses:
+        200:
+          description: "Tickets Retrieved "
+          schema:
+            $ref: "#/definitions/TicketResponse"
+          examples:
+            application/json:
+              token: "kjsbd87y23jsdhf8237y23jsdhf"
+              message: "Ticket retrievel successful"
+              status: "success"
+
+
+  /customers:
+    post:
+      tags:
+        - Customers
+      summary: "Endpoint to create/register a new customer"
+      description: "Endpoint to create a new customer in our Library system, emails must be unique."
+      parameters:
+          - in: "body"
+            name: "body"
+            description: "Information required to create a new Customer"
+            required: true
+            schema:
+              $ref: "#/definitions/CreateCustomerPayload"
+      responses:
+        201:
+          description: "Succesfull Customer Creation"
+          schema:
+            $ref: "#/definitions/CreateCustomerResponse"
+          examples:
+            application/json:
+              id: 1
+              name: John Doe
+              email: johnd@email.com
+              password: password123
+              phone: 123-456-7890
+
+    get:
+      tags:
+        - Customers
+      summary: "Returns a list of Customers"
+      description: "Endpoint to retrieve a list of all customers."
+      responses:
+        200:
+          description: "Retrieved all Customers Successfully"
+          schema:
+            $ref: "#/definitions/AllCustomersResponse"
+
+    put:
+      tags:
+        - Customers
+      summary: "Endpoint to update a customer."
+      description: "Endpoint to update a customer, this is a token authentication route, and the customer must be logged in to update their account."
+      security:
+          - bearerAuth: []
+      parameters:
+          - in: "body"
+            name: "body"
+            description: "Information required to update a Customer"
+            required: true
+            schema:
+              $ref: "#/definitions/UpdateCustomerPayload"
+      responses:
+        200:
+            description: "Succesfull Customer Update"
+            schema:
+              $ref: "#/definitions/UpdateCustomerResponse"
+            examples:
+              application/json:
+                id: 1
+                name: Dohn Joe
+                phone: "123-456-7896"
+                email: dohnj@email.com
+                password: password123
+
+    delete:
+      tags:
+        - Customers
+      summary: "Endpoint to delete a customer."
+      description: "Endpoint to delete a customer. Requires token authentication, customer must be logged in to delete their account."
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: "Sucessfully Deleted customer"
+          schema:
+            $ref: "#/definitions/DeleteCustomerResponse"
+          examples:
+            application/json:
+              message: "Customer deleted."
+
+  /customers/{customer_id}:
+    get:
+      tags:
+        - Customers
+      summary: "Returns a Customer"
+      description: "Endpoint to retrieve a customer."
+      parameters:
+          - name: customer_id
+            in: path
+            required: true
+            type: integer
+            description: ID of the customer to retrieve
+      responses:
+        200:
+          description: "Retrieved Customer Successfully"
+          schema:
+            $ref: "#/definitions/OneCustomerResponse"
+          examples:
+            application/json:
+              id: 1
+              name: Dohn Joe
+              phone: 123-456-7892
+              email: dohnj@email.com
+              password: password123
+
+
+  /inventory:
+    post:
+      tags:
+        - Inventory
+      summary: "Endpoint to create/register a new inventory item"
+      description: "Endpoint to create a new inventory in our Library system, name must be unique."
+      parameters:
+          - in: "body"
+            name: "body"
+            description: "Information required to create a new Inventory"
+            required: true
+            schema:
+              $ref: "#/definitions/CreateInventoryPayload"
+      responses:
+        201:
+          description: "Succesfull Inventory Creation"
+          schema:
+            $ref: "#/definitions/CreateInventoryResponse"
+          examples:
+            application/json:
+              id: 1
+              name: Brake Lights
+              price: 250.00
+
+    get:
+      tags:
+        - Inventory
+      summary: "Returns a list of the Inventory Items"
+      description: "Endpoint to retrieve a list of all items."
+      responses:
+        200:
+          description: "Retrieved all Items Successfully"
+          schema:
+            $ref: "#/definitions/AllInventoryResponse"
+
+
+  /inventory/{inventory_id}:
+    get:
+      tags:
+        - Inventory
+      summary: "Returns an Inventory item"
+      description: "Endpoint to retrieve an inventory item."
+      parameters:
+          - name: inventory_id
+            in: path
+            required: true
+            type: integer
+            description: ID of the item to retrieve
+      responses:
+        200:
+          description: "Retrieved Item Successfully"
+          schema:
+            $ref: "#/definitions/OneInventoryResponse"
+          examples:
+            application/json:
+                id: 1
+                name: Wheel Alignment
+                price: 100.00
+
+
+    put:
+      tags:
+        - Inventory
+      summary: "Endpoint to update the Inventory."
+      description: "Endpoint to update an item in the Inventory."
+      parameters:
+          - in: path
+            name: inventory_id
+            required: true
+            type: integer
+            description: "ID of the inventory item to update."
+          - in: "body"
+            name: "body"
+            required: true
+            description: "Inventory data to update"
+            schema:
+              $ref: "#/definitions/UpdateInventoryPayload"
+      responses:
+        200:
+            description: "Succesfull Inventory Update"
+            schema:
+              $ref: "#/definitions/UpdateInventoryResponse"
+            examples:
+              application/json:
+                id: 1
+                name: Wheel Alignment
+                price: 100.00
+
+    delete:
+      tags:
+        - Inventory
+      summary: "Endpoint to delete an item in the Inventory."
+      description: "Endpoint to delete an item in the Inventory."
+      parameters:
+          - in: path
+            name: inventory_id
+            description: "Information required to delete the inventory item"
+            required: true
+            type: integer
+      responses:
+        200:
+          description: "Sucessfully Deleted Inventory"
+          schema:
+            $ref: "#/definitions/DeleteInventoryResponse"
+          examples:
+            application/json:
+              message: "Inventory item deleted."
+
+
+  /mechanics:
+    post:
+      tags:
+        - Mechanics
+      summary: "Endpoint to create/register a new mechanic"
+      description: "Endpoint to create a new mechanics in our Library system."
+      parameters:
+          - in: "body"
+            name: "body"
+            description: "Information required to create a new mechanic"
+            required: true
+            schema:
+              $ref: "#/definitions/CreateMechanicPayload"
+      responses:
+        201:
+          description: "Succesfull Mechanic Creation"
+          schema:
+            $ref: "#/definitions/CreateMechanicResponse"
+          examples:
+            application/json:
+              id: 1
+              name: Jeremy Lake
+              email: jeremy@gmail.com
+              phone: 123-456-7890
+              salary: 5000.00
+
+    get:
+      tags:
+        - Mechanics
+      summary: "Returns a list of all the mechanics"
+      description: "Endpoint to retrieve a list of all mechanics."
+      responses:
+        200:
+          description: "Retrieved all Mechanics Successfully"
+          schema:
+            $ref: "#/definitions/AllMechanicsResponse"
+
+  /mechanics/most_tickets:
+    get:
+      tags:
+        - Mechanics
+      summary: "Returns tickets from highest to lowest"
+      description: "Endpoint to retrieve the order of most to least tickets."
+      responses:
+        200:
+          description: "List Retrieved "
+          schema:
+            $ref: "#/definitions/MechanicTicketListResponse"
+          examples:
+            application/json:
+              id: 1
+              name: Joe Smith
+              ticekts_worked: 1
+
+  /mechanics/{mechanic_id}:
+    get:
+      tags:
+        - Mechanics
+      summary: "Returns a mechanic"
+      description: "Endpoint to retrieve a mechanic."
+      parameters:
+          - name: mechanic_id
+            in: path
+            required: true
+            type: integer
+            description: ID of the mechanic to retrieve
+      responses:
+        200:
+          description: "Retrieved Mechanic Successfully"
+          schema:
+            $ref: "#/definitions/OneMechanicResponse"
+          examples:
+            application/json:
+              id: 1
+              name: Jeremy Lake
+              email: jeremy@gmail.com
+              phone: 123-456-7890
+              salary: 5000.00
+
+
+    put:
+      tags:
+        - Mechanics
+      summary: "Endpoint to update a Mechanic."
+      description: "Endpoint to update a Mechanic."
+      parameters:
+          - in: path
+            name: mechanic_id
+            required: true
+            type: integer
+            description: "ID of the mechanic to update."
+          - in: "body"
+            name: "body"
+            required: true
+            description: "Mechanic data to update"
+            schema:
+              $ref: "#/definitions/UpdateMechanicPayload"
+      responses:
+        200:
+            description: "Succesfull Mechanic Update"
+            schema:
+              $ref: "#/definitions/UpdateMechanicResponse"
+            examples:
+              id: 1
+              name: Jeremy Lake
+              email: jeremy@gmail.com
+              phone: 123-456-7890
+              salary: 5000.00
+
+    delete:
+      tags:
+        - Mechanics
+      summary: "Endpoint to delete a mechanic."
+      description: "Endpoint to delete a mechanic."
+      parameters:
+          - in: path
+            name: mechanic_id
+            description: "Information required to delete the mechanic"
+            required: true
+            type: integer
+      responses:
+        200:
+          description: "Sucessfully Deleted Mechanic"
+          schema:
+            $ref: "#/definitions/DeleteMechanicResponse"
+          examples:
+            application/json:
+              message: "Mechanic deleted."
+
+
+  /service_tickets:
+    post:
+      tags:
+        - Service Tickets
+      summary: "Endpoint to create/register a new service ticket"
+      description: "Endpoint to create a new service ticket in our Library system."
+      parameters:
+          - in: "body"
+            name: "body"
+            description: "Information required to create a new ticket"
+            required: true
+            schema:
+              $ref: "#/definitions/CreateTicketPayload"
+      responses:
+        201:
+          description: "Succesfull Ticket Creation"
+          schema:
+            $ref: "#/definitions/CreateTicketResponse"
+          examples:
+            application/json:
+              id: 1
+              vin: 17GHJ23KW765432
+              service_date: 2025-11-20
+              service_description: this is a service ticket 
+              customer_id: 2
+
+    get:
+      tags:
+        - Service Tickets
+      summary: "Returns a list of all the service tickets"
+      description: "Endpoint to retrieve a list of all service tickets."
+      responses:
+        200:
+          description: "Retrieved all Service Tickets Successfully"
+          schema:
+            $ref: "#/definitions/AllServiceTicketsResponse"
+
+
+  /service_tickets/{ticket_id}/assign_mechanic/{mechanic_id}:
+    put:
+      tags:
+        - Service Tickets
+      summary: "Endpoint to add a service ticket to a mechanic."
+      description: "Endpoint to add a service ticket to a mechanic."
+      parameters:
+          - in: path
+            name: mechanic_id
+            required: true
+            type: integer
+            description: "ID of the mechanic to add."
+          - in: path
+            name: ticket_id
+            required: true
+            description: "Ticket to edit"
+      responses:
+        200:
+            description: "Succesfull Ticket Update"
+            schema:
+              $ref: "#/definitions/UpdateTicketResponse"
+            examples:
+              application/json:
+                message: "Service ticket added to mechanic successfully."
+
+
+  /service_tickets/{ticket_id}/remove_mechanic/{mechanic_id}:
+    put:
+      tags:
+        - Service Tickets
+      summary: "Endpoint to remove a service ticket to a mechanic."
+      description: "Endpoint to remove a service ticket to a mechanic."
+      parameters:
+          - in: path
+            name: mechanic_id
+            required: true
+            type: integer
+            description: "ID of the mechanic to remove."
+          - in: path
+            name: ticket_id
+            required: true
+            description: "Ticket to edit"
+      responses:
+        200:
+            description: "Succesfull Ticket Update"
+            schema:
+              $ref: "#/definitions/UpdateRemoveTicketResponse"
+            examples:
+              application/json:
+                message: "Service ticket removed from mechanic successfully."
+
+
+  /service_tickets/{ticket_id}/edit:
+    put:
+      tags:
+        - Service Tickets
+      summary: "Endpoint to update a Service Ticket."
+      description: "Endpoint to update a Service Ticket by adding or removing mechanic ids."
+      parameters:
+          - in: path
+            name: ticket_id
+            required: true
+            type: integer
+            description: "ID of the service ticket to update."
+          - in: "body"
+            name: "body"
+            required: true
+            description: "Ticket data to update"
+            schema:
+              $ref: "#/definitions/UpdateIDTicketPayload"
+      responses:
+        200:
+            description: "Succesfull Ticket Update"
+            schema:
+              $ref: "#/definitions/UpdateIDTicketResponse"
+            examples:
+              mechanic_id: 1
+              status: success
+              ticket_id: 2
+
+
+  /service_tickets/{ticket_id}/add_inventory/{inventory_id}:
+    put:
+      tags:
+        - Service Tickets
+      summary: "Endpoint to add an item to a Ticket."
+      description: "Endpoint to add an Inventory Item to a Service Ticket."
+      parameters:
+          - in: path
+            name: ticket_id
+            required: true
+            type: integer
+            description: "ID of the service ticket to update."
+          - in: path
+            name: inventory_id
+            required: true
+            type: integer
+            description: "ID of the inventory item to add"
+      responses:
+        200:
+            description: "Succesfull Ticket Update"
+            schema:
+              $ref: "#/definitions/UpdateAddItemResponse"
+            examples:
+              application/json:
+                message: "Inventory item added to Service Ticket successfully."
+definitions:
+
+  LoginCredentials:
+    type: "object"
+    properties:
+      email:
+        type: "string"
+      password:
+        type: "string"
+
+    required:
+      - email
+      - password
+
+  LoginResponse:
+    type: "object"
+    properties:
+      token:
+        type: "string"
+      message:
+        type: "string"
+      status:
+        type: "string"
+
+  TicketPayload:
+    type: "object"
+    properties:
+      token:
+        type: "string"
+
+    required:
+      - token
+
+  TicketResponse:
+    type: "object"
+    properties:
+      ticket id:
+        type: "integer"
+      mechanic id:
+        type: "integer"
+      customer id:
+        type: "integer"
+      service date:
+        type: "date"
+      service description:
+      vin:
+        type: "string"
+
+
+  CreateCustomerPayload:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+      email:
+        type: "string"
+      password:
+        type: "string"
+      phone:
+        type: "string"
+
+    required:
+      - name
+      - email
+      - password
+      - phone
+
+
+  CreateCustomerResponse:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+      name:
+        type: "string"
+      email:
+        type: "string"
+      password:
+        type: "string"
+      phone:
+        type: "string"
+
+  OneCustomerResponse:
+    type: "array"
+    items:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+        name:
+          type: "string"
+        email:
+          type: "string"
+        password:
+          type: "string"
+        phone:
+          type: "string"
+
+
+  AllCustomersResponse:
+    type: "array"
+    items:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+        name:
+          type: "string"
+        email:
+          type: "string"
+        password:
+          type: "string"
+        phone:
+          type: "string"
+
+
+  UpdateCustomerPayload:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+      email:
+        type: "string"
+      password:
+        type: "string"
+      phone:
+        type: "string"
+
+    required:
+      - name
+      - email
+      - password
+      - phone
+
+
+  UpdateCustomerResponse:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+      name:
+        type: "string"
+      email:
+        type: "string"
+      password:
+        type: "string"
+      phone:
+        type: "string"
+
+  DeleteCustomerResponse:
+    type: "object"
+    properties:
+      message:
+        type: "string"
+
+
+  CreateInventoryPayload:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+      price:
+        type: "number"
+        format: "float"
+
+    required:
+      - name
+      - price
+
+
+  CreateInventoryResponse:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+      name:
+        type: "string"
+      price:
+        type: "number"
+        format: "float"
+
+  OneInventoryResponse:
+    type: "array"
+    items:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+        name:
+          type: "string"
+        price:
+        type: "number"
+        format: "float"
+
+
+  AllInventoryResponse:
+    type: "array"
+    items:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+        name:
+          type: "string"
+        price:
+          type: "number"
+          format: "float"
+
+
+  UpdateInventoryPayload:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+      price:
+        type: "number"
+        format: "float"
+
+    required:
+      - name
+      - price
+
+
+  UpdateInventoryResponse:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+      name:
+        type: "string"
+      price:
+        type: "number"
+        format: "float"
+
+  DeleteInventoryResponse:
+    type: "object"
+    properties:
+      message:
+        type: "string"
+
+
+  CreateMechanicPayload:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+      email: 
+        type: "string"
+      phone: 
+        type: "string"
+      salary:
+        type: "number"
+        format: "float"
+
+    required:
+      - name
+      - email
+      - phone
+      - salary
+
+
+  CreateMechanicResponse:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+      name:
+        type: "string"
+      email: 
+        type: "string"
+      phone: 
+        type: "string"
+      salary:
+        type: "number"
+        format: "float"
+
+  OneMechanicResponse:
+    type: "array"
+    items:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+        name:
+          type: "string"
+        email: 
+          type: "string"
+        phone: 
+          type: "string"
+        salary:
+          type: "number"
+          format: "float"
+
+
+  AllMechanicsResponse:
+    type: "array"
+    items:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+        name:
+          type: "string"
+        email: 
+          type: "string"
+        phone: 
+          type: "string"
+        salary:
+          type: "number"
+          format: "float"
+
+
+  UpdateMechanicPayload:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+      email: 
+        type: "string"
+      phone: 
+        type: "string"
+      salary:
+        type: "number"
+        format: "float"
+
+    required:
+      - name
+      - email
+      - phone
+      - salary
+
+
+  UpdateMechanicResponse:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+      name:
+        type: "string"
+      email: 
+        type: "string"
+      phone: 
+        type: "string"
+      salary:
+        type: "number"
+        format: "float"
+
+  DeleteMechanicResponse:
+    type: "object"
+    properties:
+      message:
+        type: "string"
+
+
+  MechanicTicketListResponse:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+      name:
+        type: "string"
+      tickets_worked:
+        type: "integer"
+
+
+  CreateTicketPayload:
+    type: "object"
+    properties:
+      vin: 
+        type: "string"
+      service_date: 
+        type: "string"
+        format: "date"
+      service_description: 
+        type: "string"
+      customer_id: 
+        type: "integer"
+
+    required:
+      - vin
+      - service_date
+      - service_description
+      - customer_id
+
+
+  CreateTicketResponse:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+      vin:
+        type: "string"
+      service_date:
+        type: "string"
+        format: "date"
+      service_description:
+        type: "string"
+      customer_id:
+        type: "integer"
+
+
+  AllServiceTicketsResponse:
+    type: "array"
+    items:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+        vin:
+          type: "string"
+        service_date: 
+          type: "string"
+          format: "date"
+        service_description: 
+          type: "string"
+        customer_id:
+          type: "integer"
+
+  UpdateTicketResponse:
+    type: "object"
+    properties:
+      message:
+        type: "string"
+
+
+  UpdateRemoveTicketResponse:
+    type: "object"
+    properties:
+      message:
+        type: "string"
+
+
+  UpdateIDTicketPayload:
+    type: "object"
+    properties:
+      add_ids:
+        type: "array"
+        items:
+          type: "integer"
+        example: []
+      remove_ids: 
+        type: "array"
+        items:
+          type: "integer"
+        example: []
+
+
+  UpdateIDTicketResponse:
+    type: "object"
+    properties:
+      mechanic_ids:
+        type: "integer"
+      status:
+        type: "string"
+      ticket_id: 
+        type: "integer"
+
+
+  UpdateAddItemResponse:
+    type: "object"
+    properties:
+      message:
+        type: "string"
