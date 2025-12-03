@@ -17,5 +17,3 @@ How to use:
 1.open the API Flask assignment file.
 2.To edit site, open files in code editor.
 3.Deploy the site using platforms like GitHub, Postman.
-
-
