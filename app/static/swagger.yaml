@@ -592,7 +592,8 @@ definitions:
       customer_id:
         type: "integer"
       service_date:
-        type: "date"
+        type: "string"
+        format: "date"
       service_description:
       vin:
         type: "string"
