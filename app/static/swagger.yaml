@@ -53,13 +53,6 @@ paths:
       description: "Endpoint to retrieve all the customers tickets."
       security:
           - bearerAuth: []
-      parameters:
-          - in: path
-            name: token
-            description: "Token required to retrieve tickets"
-            required: true
-            schema:
-              $ref: "#/definitions/TicketPayload"
       responses:
         200:
           description: "Tickets Retrieved "
@@ -588,14 +581,6 @@ definitions:
       status:
         type: "string"
 
-  TicketPayload:
-    type: "object"
-    properties:
-      token:
-        type: "string"
-
-    required:
-      - token
 
   TicketResponse:
     type: "object"
