@@ -63,9 +63,9 @@ paths:
             vin: "HASD8723JHSD8723"
             customer_id: 1
             mechanics_id: 2
-            id: 5
+            ticket_id: 5
             service_description: "Oil change and tire rotation"
-            service_date: "2025-11-20"
+            service_date: 2025-11-20
 
 
   /customers:
@@ -585,15 +585,15 @@ definitions:
   TicketResponse:
     type: "object"
     properties:
-      ticket id:
+      ticket_id:
         type: "integer"
-      mechanic id:
+      mechanic_id:
         type: "integer"
-      customer id:
+      customer_id:
         type: "integer"
-      service date:
+      service_date:
         type: "date"
-      service description:
+      service_description:
       vin:
         type: "string"
 
