@@ -60,12 +60,14 @@ paths:
             $ref: "#/definitions/TicketResponse"
           examples:
             application/json:
-            vin: "HASD8723JHSD8723"
-            customer_id: 1
-            mechanics_id: 2
-            ticket_id: 5
-            service_description: "Oil change and tire rotation"
-            service_date: 2025-11-20
+              tickets:
+                - customer_id: 1
+                  id: 5
+                  mechanics:
+                    - id: 1
+                  service_date: "2025-12-01"
+                  service_description: "Oil change and tire rotation"
+                  vin: "HASD8723JHSD8723"
 
 
   /customers:
@@ -585,16 +587,22 @@ definitions:
   TicketResponse:
     type: "object"
     properties:
-      ticket_id:
-        type: "integer"
-      mechanic_id:
+      id:
         type: "integer"
       customer_id:
         type: "integer"
+      mechanics:
+        type: "array"
+        items:
+          type: "object"
+          properties:
+            id:
+              type: "integer"
       service_date:
         type: "string"
         format: "date"
       service_description:
+        type: "string"
       vin:
         type: "string"
 
