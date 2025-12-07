@@ -6,7 +6,6 @@ from .blueprints.mechanics import mechanics_bp
 from .blueprints.service_tickets import service_tickets_bp
 from .blueprints.inventory import inventory_bp
 from flask_swagger_ui import get_swaggerui_blueprint
-from app.models import db
 
 
 
@@ -42,7 +41,5 @@ def create_app(config_name):
     app.register_blueprint(inventory_bp, url_prefix='/inventory')
     app.register_blueprint(swaggerui_blueprint, url_prefix=SWAGGER_URL)
     
-    with app.app_context():
-        from app.models import Customer, Mechanic, ServiceTicket, Inventory
-        db.create_all()
+
     return app
