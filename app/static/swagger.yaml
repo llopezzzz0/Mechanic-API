@@ -67,9 +67,12 @@ paths:
             $ref: "#/definitions/TicketResponse"
           examples:
             application/json:
-              token: "kjsbd87y23jsdhf8237y23jsdhf"
-              message: "Ticket retrievel successful"
-              status: "success"
+            vin: "HASD8723JHSD8723"
+            customer_id: 1
+            mechanics_id: 2
+            id: 5
+            service_description: "Oil change and tire rotation"
+            service_date: "2025-11-20"
 
 
   /customers:
