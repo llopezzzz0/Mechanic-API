@@ -55,8 +55,8 @@ paths:
           - bearerAuth: []
       parameters:
           - in: path
-            name: my-tickets
-            description: "Information required to retrieve tickets"
+            name: token
+            description: "Token required to retrieve tickets"
             required: true
             schema:
               $ref: "#/definitions/TicketPayload"
